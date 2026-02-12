@@ -28,25 +28,26 @@ The non-linear convective term $`\rho \mathbf{v} \cdot \nabla \mathbf{v}`$ repre
 
 ## 3. Boundary Conditions
 
-<img width="242" height="210" alt="image" src="https://github.com/user-attachments/assets/0b107943-caf0-4b58-ba09-b338efa67f7c" /> Figure 1: Branching Vessel Tree with color-coded boundary regions
-
-
 Using physiological constraints, the boundary conditions are imposed on the domain boundaries, which are divided into three distinct regions as illustrated in Figure 1:
 
-**Inlet boundary ($`\Gamma_1`$)**, where a velocity Dirichlet condition is imposed:
+<div align="center">
+  <img width="242" height="210" alt="image" src="https://github.com/user-attachments/assets/0b107943-caf0-4b58-ba09-b338efa67f7c" />
+  <br/>
+  <b>Figure 1:</b> Branching Vessel Tree with color-coded boundary regions
+</div>
 
+
+**Inlet boundary ($`\Gamma_1`$)**, where a velocity Dirichlet condition is imposed:
 ```math
 \mathbf{v} = \mathbf{v}_0 = (-50, 0)^T \text{ mm s}^{-1} \quad \text{on } \Gamma_1
 ```
 
 **Outlet boundaries ($`\Gamma_n = \Gamma_2 \cup \Gamma_3 \cup \Gamma_4 \cup \Gamma_5`$)**, with zero normal traction, Neumann conditions are imposed:
-
 ```math
 (\mu \nabla \mathbf{v} - pI) \cdot \mathbf{n} = 0 \quad \text{on } \Gamma_n
 ```
 
 **Vessel walls ($`\Gamma_6`$)**, with a no-slip condition applied, represent the stationary walls:
-
 ```math
 \mathbf{v} = 0 \quad \text{on } \Gamma_6
 ```
@@ -167,7 +168,14 @@ The non-linear system resulting from the discretized equations is solved using a
 
 The FEM solver is implemented in MATLAB following a structured workflow illustrated in Figure 2. The first step of this solver begins with loading the mesh and defining the vascular domain $`\Omega`$, following with the generation of P2-P1 basis functions for Taylor Hood elements. Subsequently, function spaces for velocity and pressure are initialized with physical parameters, and boundary conditions are assigned. The Newton-Raphson iteration loop assembles the momentum and residual vectors, applies the Dirichlet boundary conditions at inlets and walls, and finally checks the convergence. If not yet converged, the Jacobian Blocks are assembled, boundary conditions are enforced on the global system, and the linear system is solved to update the velocity and pressure fields. Post-processing steps include computing outflow rates through terminal boundaries ($`\Gamma_2`$-$`\Gamma_5`$) by averaging velocity at edge endpoints and integrating normal components using the midpoint rule, verifying mass conservation between inlet and total outlet flow, and calculating total pressure drop using length-weighted averaging of nodal pressures along boundary edges.
 
----
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/04bdd25a-438a-41bd-9d67-d425da634f64" alt="image" width="411"/>
+  <br/>
+  <b>Figure 2:</b> Diagram of computational workflow for FEM solution of arterial flow.
+</p>
+
+
+----
 
 # Results
 
@@ -177,7 +185,11 @@ The nonlinear system that arises from the convective term, was solved using the 
 
 The trend of this algorithm resembles that of a quadratic convergence, with residual norms decreasing roughly by an order of magnitude at each iteration in the final stages. This type of rapid convergence is characteristic of Newton-Raphson methods near the solution. The sparser Mesh 0 required an additional iteration to converge.
 
-**Figure 3:** Convergence history for Newton-Raphson. All meshes achieved convergence tolerance of $`10^{-6}`$ in 5 to 6 iterations.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/89c4fcef-925b-4429-b420-d1c8bdc46bcd" alt="Convergence history" width="600"/>
+  <br/>
+  <b>Figure 3:</b> Convergence history for Newton-Raphson. All meshes achieved convergence tolerance of 10<sup>-6</sup> in 5 to 6 iterations.
+</p>
 
 ## 2. Mesh Convergence
 
@@ -191,6 +203,8 @@ The four progressively refined meshes used were analysed to assess solution conv
 | 1 | 705 | 1598 | 3643 | 0.745 | 4.662 |
 | 2 | 1906 | 4087 | 9265 | 0.746 | 2.411 |
 | 3 | 7491 | 15514 | 35040 | 0.676 | 1.177 |
+
+![image](https://github.com/user-attachments/assets/19f87d36-52e5-46cf-952c-cfbbdd82572a)
 
 **Figure 4:** Visual comparison of Mesh 0 and Mesh 2 showing increased resolution.
 
